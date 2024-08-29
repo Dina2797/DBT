@@ -7,7 +7,8 @@
     Try changing "table" to "view" below
 */
 
-{{ config(materialized='table') }}
+{{ config(materialized='table', pre_hook = "drop table if exists dina_schema.raw_customers", 
+post_hook = "update dina_schema.my_first_dbt_model SET id=3 where id=1") }}
 
 with source_data as (
 
