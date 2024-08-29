@@ -1,0 +1,57 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'dbt_first'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'dbt_first'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+seeds:
+    +column_types:
+      id: int
+      user_id: int
+      order_date: date
+      status: varchar
+      _etl_loaded_at: timestamptz
+
+models:
+  dbt_first:
+    # Config indicated by + and applies to all files under models/example/
+    example:
+      +tags: "example_tag"
+      +materialized: view
+      +store_failures: true
+
+    staging:
+      +materialized: table 
+      +tags: "contains_staging"
+
+# on-run-start: "drop table if exists dina_schema.raw_customers"
+# on-run-end:  "update dina_schema.my_first_dbt_model SET id=1 where id = 2"
+
+tests:
+  +severity: warn
+  +store_failures: true      
